@@ -1,0 +1,25 @@
+Verifying the performance of a over fitting by using choosen database with python code
+Evaluate the models using crossvalidation
+
+
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.ensemble import RandomForestClassifier
+
+# Load the breast cancer dataset
+data = load_breast_cancer()
+X = data.data
+y = data.target
+
+# Splitting the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Defining the classifier
+clf = RandomForestClassifier(random_state=42)
+
+# Evaluating the model using cross-validation
+cv_scores = cross_val_score(clf, X, y, cv=5)
+
+# Outputting the cross-validation scores
+print("Cross-validation Scores:", cv_scores)
+print("Mean Cross-validation Score:", cv_scores.mean())

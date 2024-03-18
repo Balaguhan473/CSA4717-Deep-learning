@@ -1,0 +1,32 @@
+Verifying the performance of a multi class confusion matrix by using choosen database with phython code.
+Load the breast cancer dataset
+
+
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix, classification_report
+
+# Step 2: Load the breast cancer dataset
+data = load_breast_cancer()
+X = data.data
+y = data.target
+
+# Step 3: Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 4: Train a classifier
+clf = RandomForestClassifier(random_state=42)
+clf.fit(X_train, y_train)
+
+# Step 5: Make predictions
+y_pred = clf.predict(X_test)
+
+# Step 6: Evaluate the model
+conf_matrix = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:")
+print(conf_matrix)
+
+# Print classification report
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred, target_names=data.target_names))

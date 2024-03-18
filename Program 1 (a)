@@ -1,0 +1,20 @@
+To demonstrate confusion matrix using python
+             Solution: Create the NumPy array for actual and predicted labels -Dog or Not dog
+
+
+import numpy as np
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+actual_labels = np.array(["Not Dog", "Dog", "Dog", "Dog", "Not Dog", "Not Dog", "Not Dog", "Dog", "Not Dog", "Not Dog"]
+predicted_labels = np.array(["Dog", "Not Dog", "Dog", "Not Dog", "Dog", "Dog", "Dog", "Not Dog", "Dog", "Not Dog"])
+cm = confusion_matrix(actual_labels, predicted_labels, labels=["Dog", "Not Dog"])
+print("Confusion Matrix:")
+print(cm)
+
+
+sns.heatmap(cm, annot=True, cmap='Blues', fmt='g', xticklabels=["Dog", "Not Dog"], yticklabels=["Dog", "Not Dog"])
+plt.xlabel('Predicted labels')
+plt.ylabel('Actual labels')
+plt.title('Confusion Matrix')
+plt.show()

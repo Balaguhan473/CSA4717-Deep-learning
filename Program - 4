@@ -1,0 +1,48 @@
+Q4) To demonstrate the performance of a linear regression by using choosen database with python code
+calculating cross-deviation and deviation about x
+calculating regression coefficients
+function to show plot
+estimating coefficients
+plotting regression line
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+# Step 2: Load dataset
+iris = load_iris()
+X = iris.data[:, np.newaxis, 0]  # Using only one feature for simplicity (sepal length)
+y = iris.data[:, np.newaxis, 2]  # Using another feature as target (petal length)
+
+# Step 3: Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 4: Calculate cross-deviation and deviation about x
+mean_x = np.mean(X_train)
+mean_y = np.mean(y_train)
+cross_deviation = np.sum((X_train - mean_x) * (y_train - mean_y))
+deviation_x = np.sum((X_train - mean_x) ** 2)
+
+# Step 5: Calculate regression coefficients
+b1 = cross_deviation / deviation_x
+b0 = mean_y - (b1 * mean_x)
+
+# Step 6: Define function to show plot
+def plot_regression_line(X, y, b0, b1):
+    plt.scatter(X, y, color='b', marker='o', s=30)
+    y_pred = b0 + b1 * X
+    plt.plot(X, y_pred, color='r')
+    plt.xlabel('Sepal Length (cm)')
+    plt.ylabel('Petal Length (cm)')
+    plt.title('Linear Regression')
+    plt.show()
+
+# Step 7: Estimate coefficients
+print("Intercept (b0):", b0)
+print("Slope (b1):", b1)
+
+# Step 8: Plot the regression line
+plot_regression_line(X_train, y_train, b0, b1)

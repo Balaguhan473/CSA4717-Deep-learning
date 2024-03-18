@@ -1,0 +1,87 @@
+Q5 ) To demonstrate  the performance of a logistic regression  by using choosen database with python code.
+def sigmoid(z):
+    return 1 / (1 + np.exp( - z))
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Step 1: Load dataset
+iris = load_iris()
+X = iris.data[:, :2]  # Using only two features for simplicity
+y = (iris.target != 0) * 1  # Convert targets to binary: 1 if not iris-setosa else 0
+
+# Step 2: Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 3: Define sigmoid function
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+# Step 4: Define logistic regression function
+def logistic_regression(X, y, num_iterations, learning_rate):
+    # Initialize weights and bias
+    n_samples, n_features = X.shape
+    weights = np.zeros(n_features)
+    bias = 0
+
+    # Gradient descent
+    for i in range(num_iterations):
+        # Compute predicted values
+        linear_model = np.dot(X, weights) + bias
+        y_pred = sigmoid(linear_model)
+
+        # Compute gradients
+        dw = (1/n_samples) * np.dot(X.T, (y_pred - y))
+        db = (1/n_samples) * np.sum(y_pred - y)
+
+        # Update weights and bias
+        weights -= learning_rate * dw
+        bias -= learning_rate * db
+
+    return weights, bias
+
+# Step 5: Train the logistic regression model
+num_iterations = 1000
+learning_rate = 0.01
+weights, bias = logistic_regression(X_train, y_train, num_iterations, learning_rate)
+
+# Step 6: Predict using the trained model
+def predict(X, weights, bias):
+    linear_model = np.dot(X, weights) + bias
+    y_pred = sigmoid(linear_model)
+    return y_pred
+
+# Step 7: Evaluate the model
+y_pred_train = predict(X_train, weights, bias)
+y_pred_test = predict(X_test, weights, bias)
+
+# Step 8: Print accuracy and other metrics
+print("Training Accuracy:", accuracy_score(y_train, y_pred_train.round()))
+print("Testing Accuracy:", accuracy_score(y_test, y_pred_test.round()))
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred_test.round()))
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred_test.round()))
+
+# Step 9: Plot the decision boundary
+def plot_decision_boundary(X, y, weights, bias):
+    x1_min, x1_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    x2_min, x2_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    xx1, xx2 = np.meshgrid(np.arange(x1_min, x1_max, 0.02),
+                           np.arange(x2_min, x2_max, 0.02))
+    Z = predict(np.c_[xx1.ravel(), xx2.ravel()], weights, bias)
+    Z = Z.reshape(xx1.shape)
+    plt.contourf(xx1, xx2, Z, alpha=0.8)
+    plt.scatter(X[:, 0], X[:, 1], c=y, edgecolors='k')
+    plt.xlabel('Sepal Length')
+    plt.ylabel('Sepal Width')
+    plt.title('Logistic Regression Decision Boundary')
+    plt.show()
+
+# Step 10: Plot decision boundary
+plot_decision_boundary(X_test, y_test, weights, bias)
